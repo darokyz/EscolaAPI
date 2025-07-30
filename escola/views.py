@@ -2,7 +2,7 @@ from django.http import JsonResponse
 
 # Create your views here.
 
-def estudantes (request):
+def estudantes(request):
 
     if request.method == 'GET':
         estudantes = {
