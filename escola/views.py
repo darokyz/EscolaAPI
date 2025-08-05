@@ -1,12 +1,33 @@
-from django.http import JsonResponse
+from escola.models import Estudante, Curso, Matricula
+from escola.serializers import EstudanteSerializer, CursoSerializer, MatriculaSerializer, ListaMatriculasEstudantesSerializer, ListaMatriculaCursosSerializer
+from rest_framework import viewsets, generics
+from rest_framework.authentication import BasicAuthentication
+from rest_framework.permissions import IsAuthenticated
 
-# Create your views here.
 
-def estudantes(request):
+class EstudanteViewSet(viewsets.ModelViewSet):
+    queryset = Estudante.objects.all()
+    serializer_class = EstudanteSerializer
 
-    if request.method == 'GET':
-        estudantes = {
-            'id': 1,
-            'Nome': 'Lais'
-        }
-    return JsonResponse(estudantes)
+class CursoViewSet(viewsets.ModelViewSet):
+    queryset = Curso.objects.all()
+    serializer_class = CursoSerializer
+
+
+class MatriculaViewSet(viewsets.ModelViewSet):
+    queryset = Matricula.objects.all()
+    serializer_class = MatriculaSerializer
+
+
+
+class ListaMatriculaEstudante(generics.ListAPIView):
+    def get_queryset(self):
+        queryset = Matricula.objects.filter(estudante_id=self.kwargs['pk'])
+        return queryset
+    serializer_class = ListaMatriculasEstudantesSerializer
+
+class ListaMatriculaCurso(generics.ListAPIView):
+    def get_queryset(self):
+        queryset = Matricula.objects.filter(curso_id=self.kwargs['pk'])
+        return queryset
+    serializer_class = ListaMatriculaCursosSerializer
